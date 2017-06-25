@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang = "en">
+
+<head>
+  <meta charset = "utf-8">
+  <meta name = "viewport" content = "width = device-width, initial-scale = 1">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico')}}">
+  <title>Logger APP</title>
+</head>
+
+<body>
+  <header>
+    <span class="site-title">Logger App</span>
+    <nav class="header-nav">
+      <a href="#" data-toggle="modal" data-target="#createRun_Modal" data-backdrop="false" data-dismiss="modal">Create Run</a>
+      <div class="dropdown">
+        <a href="#" class="dropbtn" id= "dropdownmenu" data-toggle="dropdown">Databases</a>
+        <ul class="dropdown-menu" method="post" action = aria-labelledby="dropdownmenu">
+          {% for name in dbFiles %}
+          <li>
+            <a  href="{{ url_for('deftablename', drop=name) }}">{{ name }}<i onclick=remove('{{ name }}') class="glyphicon glyphicon-trash"></i></a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <a href="#" data-toggle="modal" data-target="#calibrate_modal" data-backdrop="false" data-dismiss="modal">Calibrate</a>
+      
+      <div class="dropdown" id="header-nav--last" >
+        <a href="#" class="glyphicon glyphicon-off"  id= "Shut" data-toggle="dropdown"></a>
+        <ul class="dropdown-menu pull-right" method="post" action = aria-labelledby="Shut">
+          <li> <a  href=/reboot>Reboot</a></li>
+          <li> <a  href=/shutdown>Shutdown</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <div id="page">
+
+    <h2 id="heading"></h2>
+
+    <div class="info-start">
+      <!-- START -->
+      <div class="start">
+        <input class="btn btn-success btn-lg" type="button" value="Start" id="startStop">
+        <a id="subscribe" class="start-refresh trigger"   data-toggle="popover"><span class='txt'></a>
+        <div id="popover-form" class="hide">
+            <form id="refresh_form" class="form-inline" role="form">
+            <div class="inline">
+                <input id="popoverInput" type="text" style="width: 100px;">   min
+          
+            <button type="submit" id="popoverSubmit" class="btn btn-warning">Save</button>
+            </div>
+            </form>
+        </div>
+    </div>
+    </div>
+    <p>
+      <!-- INFO -->
+      <div class="info">
+        <button href="#demo" class="btn btn-info" data-toggle="collapse" id="infobutton">Info</button>
+        <div id="demo" class="collapse">
+          <div class="form-group">
+            <form action="{{ url_for('submittext') }}" method="post" role="form">
+              <textarea name='text' type = "text" class="form-control" rows="4">{{infotextarea}}</textarea>
+              <input type="submit"  name='text' type = "text" class="btn btn-info" value="Save"></input>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- FIM INFO -->
+
+    <!-- GRAPH FRAME -->
+
+    <div class="panel panel-info">
+      <div class="panel-heading"></div>
+      <div class="panel-body">
+        <!-- Graph -->
+        <div class="row">
+
+          <div class="col-md-10" id="coluna-1">
+            <div id="temperature_plot" style="max-width: 600px; margin-left: 2; height: 400px; margin: 0 auto"></div>
+          </div>
+
+          <div class="col-md-2" id="coluna-2">
+            <div class="panel panel-danger">
+              <div class="panel-heading">Real Time (ºC)</div>
+              <div class="panel-body">
+                <h4 id="T1">T1:</h4>
+                <h4 id="T2">T2:</h4>
+                <h4 id="Tex">Tex:</h4>
+              </div><!-- Fim COLUNA 2 -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- GRAPH FRAME -->
+    </div>
+</div>
+
+  <!-- MODAL CREATE RUN -->
+  <div class="modal" id="createRun_Modal">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">New Run</h4>
+  </div>
+  <div class="modal-body" rows="1">
+    <form method='POST' role="form" action="/createRun" id="form1">
+      <div class="form-group">
+        <label for="message-text" class="form-control-label">Name:</label>
+        <input class="form-control" id= "newName" name="runName"></input>
+      </div>
+    </form>
+    <button type="submit" class="btn btn-primary" id="createButton" form="form1">Create</button>
+  </div>
+</div>
+
+  <!-- MODAL CALIBRATE -->
+  <div class="modal" id="calibrate_modal">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Calibrate sensors</h4>
+  </div>
+  <div class="modal-body" rows="1">
+    <form method='POST' role="form" id="form_calibrate">
+      <div class="form-group">
+        <label for="message-text" class="form-control-label">String:</label>
+        <input class="form-control" id="input_calibrate" placeholder=":CAL CLEAR // clean EPROM memory; CAL: T1,T2,Tex // calibrate sensors"></input>
+      </div>
+    </form>
+    <button type="submit" class="btn btn-primary" id="send_calibrate">Send to Arduino</button>
+  </div>
+</div>
+
+<!-- alert modal -->
+<div class="modal" id="alertModal" style="display:none;">
+  <div class="modal-header" >
+    <strong class="modal-title">Warning</strong>
+  </div>
+  <div class="modal-body" id="bodyalertmodal">
+    <p id="alertText">
+    </p>
+  </div>
+</div>
+
+
+<!-- JS -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/highcharts.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/exporting.js') }}"></script>
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script> -->
+<!-- CSS Styles -->
+<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet"></link>
+<link href="{{ url_for('static', filename='css/bootstrap-combined.min.css') }}" rel="stylesheet"></link>
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"></link>
+
+
+
+<script>
+
+var refresh_value;
+$(document).ready(function() {       //define refresh time
+  refresh_value = parseFloat('{{refresh_value}}');
+  });
+
+
+function remove(e){
+$.post( "deleteTable",
+  {string: e},
+  function (incoming){
+    manageAlerts(incoming);
+  }
+)};
+
+
+
+$('body').on('click', function (e) {
+    $('[data-toggle="popover"]').each(function () {
+        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+            $(this).popover('hide');
+        }
+    });
+});
+
+
+
+$("#subscribe").popover({
+    title: 'Refresh Time (1-60 min)',
+    container: 'body',
+    placement: 'right',
+    html: true, 
+    content: function(){
+          return $('#popover-form').html();
+    }
+});
+
+var timer = null;
+
+$(document).on("click", "#startStop", function () {
+  currentvalue = document.getElementById('startStop').value;
+  if(currentvalue == "Start"){
+    document.getElementById("startStop").value="Stop";
+    $ ('#toplabel').text("Running");
+    $ ("#startStop").removeClass("btn-warning btn-success").addClass("btn-danger active");
+    postToFlask('start',refresh_value);
+    timer = setInterval(function(){ getHighChart()}, refresh_value*1000*60);
+  }else{
+    document.getElementById("startStop").value="Start";
+    clearInterval(timer);
+    $ ('#toplabel').text("Stopped");
+    $ ("#startStop").removeClass("btn-warning btn-danger").addClass("btn-success");
+	postToFlask('stop',refresh_value);  
+  }
+});
+
+//label top page
+$(document).ready(function() {
+  var tablename = '{{ tablename }}';
+  var runningtablename = '{{runningtablename}}';
+  if (tablename) {
+    $('#heading').html(tablename+'  '+ '<span class="label label-warning" id="toplabel">Stopped</span>');
+    $(".start-refresh .txt").text('(Refresh '+refresh_value+'min)');
+    document.getElementById("startStop").disabled = false;
+    document.getElementById("infobutton").disabled = false;
+  } if (runningtablename!='false' && tablename !=runningtablename || tablename ==''){
+    document.getElementById("startStop").disabled = true;
+    document.getElementById("infobutton").disabled = true;
+    $(".start-refresh .txt").text('   ');
+} if (tablename == runningtablename){
+    document.getElementById("startStop").disabled = false;
+    document.getElementById("infobutton").disabled = false;
+    $(".start-refresh .txt").text('(Refresh '+refresh_value+'min)');
+    $ ('#toplabel').text("Running");
+    $ ("#startStop").removeClass("btn-warning btn-success").addClass("btn-danger active");
+    document.getElementById("startStop").value="Stop";
+    timer = setInterval(function(){ getHighChart()}, refresh_value*1000*60);
+  };
+});
+
+
+
+
+
+//block save button in info textarea
+$(document).ready(function() {
+  $('input[type="submit"]').attr('disabled', true);
+  $('input[type="text"],textarea').on('keyup',function() {
+    var textarea_value = $("#text").val();
+    var text_value = $('input[name="textField"]').val();
+    if(textarea_value != '' && text_value != '') {
+      $('input[type="submit"]').attr('disabled' , false);
+    }else{
+      $('input[type="submit"]').attr('disabled' , true);
+    }
+  });
+});
+
+// Start calibrate string to ARDUINO
+$(document).on("click", "#send_calibrate", function () {
+      $('#calibrate_modal').modal('hide');
+      func_toArduino($('#input_calibrate').val());
+    });
+
+function func_toArduino(val){
+  $.post( "/def_calibrate",
+  {string: val},
+  function (incoming){
+    manageAlerts(incoming);
+  }
+)};
+// END SEND
+
+
+
+// Control instant temperatures
+
+
+// $(document).ready(function() {
+// var realtimer = setInterval(function(){ instantTemp()}, 8000);
+// });
+
+// function instantTemp(){
+//   $.post( "/instantTemp",
+//   {string: ':DATA'},
+//   function (data){
+//     $('#T1').html('T1: '+data.t1)
+//     $('#T2').html('T2: '+data.t2)
+//     $('#Tex').html('Tex: '+data.tex)
+//   });
+// };
+
+
+// END
+
+$(document).on("click", "#popoverSubmit", function () {
+  var tempinputval = $(".popover #popoverInput").val();
+  $('.popover-markup').popover('hide');
+  if (tempinputval == parseInt(tempinputval, 10)&&tempinputval>0&&tempinputval<61 ){
+    $(".start-refresh .txt").text('(Refresh '+tempinputval+'min)');
+    $('.start-refresh').popover('hide');
+    refresh_value = tempinputval;
+    console.log(refresh_value)
+    if (document.getElementById('startStop').value=="Stop") {
+      postToFlask('changed',refresh_value);
+    }     
+    if (document.getElementById('startStop').value=="Start") {
+      postToFlask('neutral',refresh_value);
+      console.log(refresh_value);
+    };
+  };
+});
+
+
+function postToFlask(a,b){
+  $.post( "/managecron",
+  {state: a, _time: b, tablename: '{{tablename}}'},
+  function (incoming){
+    manageAlerts(incoming);
+  }
+);
+};
+
+function manageAlerts(text){
+    $('#alertText').html(text);
+    $("#alertModal").fadeTo(200, 1).delay(2000).slideUp(500, function(){
+    $("#alertModal").slideUp(200);
+    });
+};
+
+
+
+$('#alertModal').on('shown.bs.modal', function () {
+  $(this).find('.modal-dialog').css({width:'auto',
+  height:'auto',
+  'max-height':'100%'});
+});
+
+
+getHighChart() //fire on page reload
+function getHighChart() {
+  jQuery.get("/getvalues", function(data) {
+    draw_graph(data.T1,data.T2,data.Tex);
+  });
+};
+
+function draw_graph(T1,T2,Tex) {
+  var chart = new Highcharts.Chart({
+    chart: {
+        renderTo: 'temperature_plot',
+        type: 'spline',
+        zoomType: 'x'
+    },
+    title:{
+      text:''
+  },
+      yAxis: {
+          title: {
+              text: 'Temperature (°C)'
+          },
+          plotLines: [{
+              value: 0,
+              width: 1,
+              color: '#808080'
+          }]
+      },
+      tooltip: {
+          valueSuffix: '°C'
+      },
+                  rangeSelector:{
+                  enabled:true
+              },
+      plotOptions: {
+          spline: {
+              lineWidth: 4,
+              states: {
+                  hover: {
+                      lineWidth: 5
+                  }
+              },
+              marker: {
+                  enabled: false
+              }
+            }},
+      legend: {
+          layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'middle',
+          borderWidth: 0
+      },
+    xAxis: {
+        showInLegend: false,
+        type: 'datetime',
+        overflow:'justify',
+        labels: {
+              format: '{value:%m-%d %H:%M}',
+          }
+    },
+    series: [{
+        lineWidth: 1.5,
+        showInLegend: false,
+        name: 'T1',
+        data: T1
+    }, {
+      lineWidth: 1.5,
+      showInLegend: false,
+      name: 'T2',
+      data: T2
+    }, {
+      lineWidth: 1.5,
+      showInLegend: false,
+      name: 'Tex',
+      data: Tex
+    }]
+
+  });
+  };
+
+</script>
+</body>
+</html>

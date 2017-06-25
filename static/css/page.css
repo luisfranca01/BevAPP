@@ -1,0 +1,133 @@
+ul>li>a:hover i{
+display:block !important;
+float:right !important;
+}
+ul>li>a>i{
+display:none !important;
+}
+.glyphicon-edit{
+padding-left:7%;
+}
+
+ul>li:hover i{
+display:block !important;
+float:right !important;
+}
+ul>li>i{
+display:none !important;
+}
+
+
+
+
+#panelbody{
+position: relative;
+float: left;
+left: 50%;
+transform: translate(-50%, -50%);
+}
+
+/*popover size*/
+.popover {
+    width: 225px;
+    max-height: 95px;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+body {
+  box-sizing: border-box;
+}
+
+/* Header */
+header {
+  position: relative;
+  height: 60px;
+  background-color: #444;
+  display: flex;
+}
+
+/* Elementos */
+.site-title {
+  border-right: 2px solid #eee;
+  margin: 0 20px;
+  line-height: 60px;
+  vertical-align: middle;
+  width: 250px;
+  color: #f4f8f8;
+  text-align: center;
+  font-size: medium;
+  text-transform: uppercase;
+}
+
+
+
+
+.header-nav {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px 20px;
+  width: calc(100% - 100px);
+}
+
+.header-nav {
+  margin: 0 20px;
+  width: calc(100% - 100px);
+}
+
+.header-nav a {
+  display: inline-block;
+  padding: 5px 10px;
+  text-transform: uppercase;
+  position: relative;
+  color: white;
+}
+
+.header-nav a:hover {
+  color: #32d3d3;
+}
+
+.header-nav a form {
+  display: none;
+}
+
+.header-nav a:hover form {
+  display: block;
+  position: absolute;
+}
+
+.header-nav a:hover form {
+  display: block;
+  position: absolute;
+}
+
+#header-nav--last {
+  margin-left: auto;
+}
+
+#divNameInput{
+  position:relative;
+  margin: 20px;
+  width: 80%;
+  padding: 10px;
+  color:red;
+}
+
+
+/* Main */
+#page {
+    margin: auto;
+    width: 70%;
+    padding: 10px;
+}
