@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang = "en">
+
+<head>
+  <meta charset = "utf-8">
+  <meta name = "viewport" content = "width = device-width, initial-scale = 1">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico')}}">
+  <title>Produção</title>
+
+
+  <link href="{{ url_for('static', filename='DataTables/datatables.min.css') }}" rel="stylesheet" type="text/css"></link>
+  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet"></link>
+  <link href="{{ url_for('static', filename='css/bootstrap-combined.min.css') }}" rel="stylesheet"></link>
+  <link href="{{ url_for('static', filename='css/page.css') }}" rel="stylesheet" type="text/css"></link>
+  <link href="{{ url_for('static', filename='css/flatpickr.css') }}" rel="stylesheet" type="text/css"></link>
+
+</head>
+
+
+<body class="viewport">
+  <header>
+    <span class="site-title">Produção</span>
+    <nav class="header-nav">
+      <a href="#" id="showInserir">Bebidas</a>
+      <div class="dropdown">
+        <a href="#" class="dropbtn" id= "dropdownmenu" data-toggle="dropdown">Produzir</a>
+        <ul class="dropdown-menu" method="post" action = aria-labelledby="dropdownmenu">
+        </ul>
+      </div>
+      <a href="#" id="showCalculos">Cálculos</a>
+      <a href="#" id="showPrecosStock">Preços e Stock</a>
+      <a href="#" style="margin-left: auto;" id="showLoggerAPP">Logger APP</a>
+    </nav>
+  </header>
+
+
+
+
+  <!-- DIV BEBIDAS -->
+
+  <div id="divInserir" style="display:none;">
+    <div class="panel panel-default">
+    </div>
+
+    <div class="row">
+      <div class="col-sm-2 col-md-3" >
+        <div class="panel-group" id="accordion" style="float:left; margin-top: 5%; margin-right: 3%; margin-left: 20%;">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a data-toggle="collapse" id="inserirFormula" data-parent="#accordion" href="#"><span class="glyphicon glyphicon-plus">
+                </span> Inserir fórmula</a>
+              </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in">
+            </div>
+          </div>
+          <div class="panel panel-default" >
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"><span class="glyphicon glyphicon-saved">
+                </span> Bebidas</a>
+              </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse">
+              <div class="panel-body">
+                <table class="table">
+                  <tr>
+                    <td>
+                      <a href="http://www.jquery2dotnet.com">Orders</a> <span class="label label-success">$ 320</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <a href="http://www.jquery2dotnet.com">Invoices</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <a href="http://www.jquery2dotnet.com">Shipments</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <a href="http://www.jquery2dotnet.com">Tex</a>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-sm-7 col-sm-7" >
+        <div  id="well_novaBebida" style="display: none;">
+          <form id="form_bebidas">
+            <div class="row">
+              <h3><input data-parsley-trigger="keyup" id="nomeBebida" autocomplete="off" required autofocus  data-parsley-errors-messages-disabled placeholder="Designação" type="text" style="min-width: 150px; font-size:26px;padding:10px 5px 10px 10px;" onkeypress="this.style.width = ((this.value.length + 1) * 16) + 'px';"></input></h3>
+              <small><span class="glyphicon glyphicon-plus sm"></span> adicionar matéria prima (excepto água)</small>
+
+              <table class="table table-sm" cellspacing="0" id="table_bebidas">
+                <thead>
+                  <tr>
+                    <th style="width: 50%; float:left; border-bottom:none;">Matéria Prima</th>
+                    <th style="width: 15%; border-bottom:none;" >Quantidade</th>
+                    <th style="width: 15%; border-bottom:none;">Unidade</th>
+
+                  </tr>
+                </thead>
+
+                <tbody class="tbody_bebidas">
+                  <tr class="mx-auto">
+                    <td >
+                      <select class="dropdown_materiaprima" name="dropdown_materiaprima" required focus data-parsley-errors-messages-disabled>
+                        <option disabled selected value > -- Inserir -- </option>
+                      </select>
+                    </td>
+                    <td>
+                      <input id="input_quantidade" data-parsley-type="number" required focus data-parsley-errors-messages-disabled class="text-line" required/>
+                    </td>
+                    <td>
+                      <label id="label_unidademateriaprima"></label>
+                    </td>
+                    <td>
+                      <input class="del" type="button" value="Apagar"/>
+                    </td>
+                  </tr>
+                  <tr>
+
+                    <td >
+                      <select class="dropdown_materiaprima" name="dropdown_materiaprima" required focus data-parsley-errors-messages-disabled>
+                        <option disabled selected value> -- Inserir -- </option>
+                      </select>
+                    </td>
+                    <td>
+                      <input id="input_quantidade" data-parsley-type="number" required focus data-parsley-errors-messages-disabled class="text-line"/>
+                    </td>
+                    <td>
+                      <label id="label_unidademateriaprima"></label>
+                    </td>
+                    <td>
+                      <input class="add" type="button" value="Adcionar"/>
+                    </td>
+
+                  </tr>
+
+                </tbody>
+              </table>
+              <button type='button' class="btn btn-primary" id="button_guardarBebida">Guardar</button>
+
+            </form>
+          </div>
+        </form>
+      </div>
+
+
+
+
+
+    </div>
+    <div id="well_bebidasGuardadas" style="display: none;">
+
+      <div>
+        <h4>guardadas</h4>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="divCalculos" style="display:none;">
+  <div class="panel panel-default">
+    <div class="panel-heading">Cálculos</div>
+  </div>
+</div>
+
+
+
+<div id="divProduzir" style="display:none;">
+  <div class="panel panel-default">
+    <div class="panel-heading">Produção</div>
+  </div>
+</div>
+
+<!-- PRECOS E Stock -->
+<div id="divshowPrecosStock" style="display:none;">
+  <div class="panel panel-default">
+    <div class="panel-heading"><h4>Preços e Stock</h4></div>
+  </div>
+  <div class="col-sm-12">
+    <div id="divPlus" >
+      <button type='button' href="#" class="btn btn-info" id="button_addMP">
+        <span class = "glyphicon glyphicon-plus"></span>Adicionar
+      </button>
+    </div>
+  </div>
+  <div name="MPlist" >
+    <table class="table table-striped" width="100%" cellspacing="0" id="tableMP" class="display" cellspacing="0" >
+    </table>
+  </div>
+</div>
+<!-- MODAL Comentario -->
+<div class="modal" id="modalComentario">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <h4 class="modal-title">Info</h4>
+</div>
+<div class="modal-body" rows="1">
+  <form  id="form1">
+    <div class="form-group">
+      <textarea class="form-control" type = "text" rows = "3" id= "comentarioText"></textarea>
+    </div>
+  </form>
+  <button type='button' class="btn btn-primary" id="guardarComentario">Guardar</button>
+</div>
+</div>
+<!-- END -->
+
+<!-- MODAL EDITAR MateriaPrima -->
+<div class="modal" id="modalEditarMP">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" <span="" aria-hidden="true">×</button>
+    <h4 class="modal-title">Dados Matéria-Prima</h4>
+  </div>
+    <!-- modal inserir materia prima -->
+
+  <div class="modal-body">
+    <div class="container-fluid">
+      <form id="form_editar1">
+        <div class="row">
+          <div class="col-md-12"><label><h5>Matéria Prima, Referência:</h5></label><input type="text" autocomplete="off" required focus data-parsley-errors-messages-disabled id="editar_materiaprima" required class="form-control" ></div>
+        </div>
+        <div class="row">
+          <label class="col-md-12"><h5>Caracterização Quimica:</h5></label>
+          <span class="col-md-3"><label for="editar_sg20"><small>SG 20/20</small><input name="editar_sg20" id="editar_sg20" focus data-parsley-type="range" data-parsley-range="[0.5, 2]" data-parsley-errors-messages-disabled class="form-control" type="text"></label></span>
+          <span class="col-md-3"><label for="editar_brix"><small>Brix</small><input name="editar_brix" id="editar_brix" focus data-parsley-type="range" data-parsley-range="[0, 100]" data-parsley-errors-messages-disabled  class="form-control" type="text"></label></span>
+          <span class="col-md-3"><label for="editar_abv"><small>% Vol Alc</small><input name="editar_abv" id="editar_abv" focus data-parsley-type="range" data-parsley-range="[0, 100]" data-parsley-errors-messages-disabled class="form-control" type="text"></label></span>
+          <span class="col-md-3"><label for="editar_peg"><small>% PEG</small><input name="editar_peg" id="editar_peg" focus data-parsley-type="range" data-parsley-range="[0, 100]" data-parsley-errors-messages-disabled class="form-control" type="text"></label></span>
+        </div>
+        <div class="row">
+          <label class="col-md-12"><h5>Preços e Stock:</h5></label>
+          <span class="col-md-3"><label for="editar_preco"><small>Preço</small><input name="editar_preco" focus data-parsley-errors-messages-disabled data-parsley-type="number" id="editar_preco" class="form-control" type="text"></label></span>
+          <span class="col-md-3"><label for="editar_stock"><small>Stock</small><input name="editar_stock" focus data-parsley-errors-messages-disabled data-parsley-type="number" id="editar_stock" class="form-control" type="text"></label></span>
+          <span class="col-md-3"><label for="editar_unidade"><small>Unidade</small><select style="height:2.1em;width:5.8em;" name="editar_unidade" id="editar_unidade" type="select" class="form-control"><option value="Kg">Kg</option><option value="L">L</option></select>
+          </div>
+          <div class="row">
+            <span class="col-md-6"><label for="editar_lote"><small>Lote</small><input name="editar_lote" id="editar_lote" class="form-control" type="text"></label></span>
+            <span class="col-md-6"><label for="editar_validade"><small>Validade</small><input name="editar_validade" id="editar_validade" class=flatpickr data-date-format="d-m-Y"></label></span>
+            <div class="col-sm-1 col-sm-offset-1" style="float: left;">
+              <!-- <form action="{{ url_for('manageUpload') }}" method = "POST" enctype="multipart/form-data"> -->
+              <label id='icon_uploadFT' data-toggle='tooltip' title="Upload Ficha Técnica">
+                <span id ="span_iconUpload" name="span_iconUpload" class="glyphicon glyphicon-file"></span>
+                <input id='uploadFT' type="file" accept=".pdf" style="position: fixed; top: -100em">
+              </label>
+            <!-- </form> -->
+            </div>
+          </div>
+
+          <div class="row.col-md-offset-3">
+            <button type='button' class="btn btn-primary" id="button_guardarEditarMP">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- FIM PRECOS E Stock -->
+
+
+
+  <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+  <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/page.js') }}"></script> -->
+  <script type="text/javascript" src="{{ url_for('static', filename='DataTables/datatables.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/parsley.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/flatpickr.js') }}"></script>
+
+
+  <script>
+
+
+  var tableMateriaPrima;
+  var arrayMP;
+
+  $(document).ready(function() {
+    $('form#form_editar1').parsley();
+    $('form#form_bebidas').parsley();
+  });
+
+  $(document).ready(function() {
+    var picker = flatpickr("#editar_validade", {altInput:true,minDate:"today"});
+    });
+
+
+  $(document).on("click", "#showInserir", function (){
+    $("#divInserir").toggle();
+    $("#divCalculos").hide();
+    $("#divProduzir").hide();
+    $("#divshowPrecosStock").hide();
+  });
+  $(document).on("click", "#showCalculos", function (){
+    $("#divCalculos").toggle();
+    $("#divInserir").hide();
+    $("#divProduzir").hide();
+    $("#divshowPrecosStock").hide();
+  });
+  $(document).on("click", "#showProduzir", function (){
+    $("#divProduzir").toggle();
+    $("#divCalculos").hide();
+    $("#divInserir").hide();
+    $("#divshowPrecosStock").hide();
+  });
+  $(document).on("click", "#showPrecosStock",function (){
+    $("#divshowPrecosStock").toggle();
+    $("#divCalculos").hide();
+    $("#divInserir").hide();
+    $("#divProduzir").hide();
+    updateTableMP()
+  });
+
+  function updateTableMP() {
+    tableMateriaPrima = $('#tableMP').DataTable( {
+      select: {style:'single'},
+      "autoWidth": true,
+      paging: false,
+      searching: true,
+      "info":  false,
+      "ajax": "{{ url_for('getTableMP') }}",
+      "sAjaxDataProp": "",
+      "destroy": true,
+      responsive:true,
+      "columnDefs": [
+        {
+          "targets": [ 0 ],
+          "visible": false,
+        },
+        {
+          "targets": [ 11],
+          "visible": false,
+        },
+        {
+        "targets": [ 12],
+        "visible": false,
+        }
+      ],
+
+      "columns": [
+        {data:'sql_id', title: "ID","bSortable":false},
+        {data:'sql_materiaprima', title: "Matéria Prima, Referência", "bSortable":true},
+        {data:'sql_sg20', title: "SG 20/20", "bSortable":false},
+        {data:'sql_brix', title: "Brix", "bSortable":false},
+        {data:'sql_abv', title: "% Vol Alc", "bSortable":false},
+        {data:'sql_peg', title: "% PEG", "bSortable":false},
+        {data:'sql_stock', title: "Stock", "bSortable":true},
+        {data:'sql_preco', title: "Preço, €/uni", "bSortable":true},
+        {data:'sql_unidade', title: "Unidade", "bSortable":false},
+        {data:'sql_lote', title: "Lote", "bSortable":false},
+        {data:'sql_validade', title: "Validade", "bSortable":true},
+        {data:'sql_observacao', title: "Observação", "bSortable":false},
+        {data:'sql_pdf', title: "pdf", "bSortable":false},
+        {
+          data: null,
+          className: "center",
+          defaultContent: "<a href='#' class='glyphicon glyphicon-comment' id='showComentario'  data-toggle='tooltip' title=Comentário></a> / <a href='#' data-toggle='tooltip' title='Editar' class='glyphicon glyphicon-pencil' id='editar' ></a> / <a href='#' class='glyphicon glyphicon-trash' id='apagar'  data-toggle='tooltip' title='Apagar' ></a> / <a href='#' class='glyphicon glyphicon-file' id='pdf'  data-toggle='tooltip' title='Ficha Técnica' ></a>"
+        }
+      ],
+      'rowCallback': function(row, data, index){
+        var validade= moment(data["sql_validade"],'DD-MM-YYYY');
+        var today = moment().startOf('day');
+        var dif = validade.diff(today,'days')
+        if (dif < 30){
+          $(row).find('td:eq(9)').css('color', 'red');
+        } if (dif < 90&&dif >=30){
+          $(row).find('td:eq(9)').css('color', '#ff6600');
+        }
+      }
+    });
+
+    $('#tableMP tbody').on('click', 'tr', function () {
+      document.getElementById("form_editar1").reset();
+      arrayMP = tableMateriaPrima.row( this ).data();
+      $('#comentarioText').val(arrayMP["sql_observacao"])
+      $("#editar_materiaprima").val(arrayMP["sql_materiaprima"]);
+      $("#editar_sg20").val(arrayMP["sql_sg20"]);
+      $("#editar_abv").val(arrayMP["sql_abv"]);
+      $("#editar_peg").val(arrayMP["sql_peg"]);
+      $("#editar_stock").val(arrayMP["sql_stock"]);
+      $("#editar_preco").val(arrayMP["sql_preco"]);
+      $("#editar_unidade").val(arrayMP["sql_unidade"]);
+      $("#editar_brix").val(arrayMP["sql_brix"]);
+      $("#editar_lote").val(arrayMP["sql_lote"]);
+      $("#editar_validade").val(arrayMP["sql_validade"]);
+    });
+  };
+
+  // mostrar comentario de materiaprima
+  $(document).on("click", "#showComentario",function (){
+    $('#modalComentario').modal('show');
+  });
+
+
+// cor do icon upload no modal editar
+  $(document).on("change", "#icon_uploadFT", function (){
+    var x = document.getElementById("uploadFT").value.replace(/C:\\fakepath\\/i, '');
+    $('#icon_uploadFT').attr('title', x)
+              .tooltip('fixTitle')
+              .tooltip('show');
+    $('#span_iconUpload').addClass('green');
+  });
+
+
+
+  $(document).on("click", "#button_addMP", function (){
+    document.getElementById("form_editar1").reset();
+    $('#button_guardarEditarMP').attr('class','btn btn-primary 1st');
+    $('#modalEditarMP').modal('show');
+  });
+  // editar materiaprima
+  $(document).on("click", "#editar", function (){
+    $('#button_guardarEditarMP').attr('class','btn btn-primary edition');
+    $('#modalEditarMP').modal('show');
+  });
+
+
+
+  $(document).on("click", "#guardarComentario",function (){
+    $('#modalComentario').modal('hide');
+    var text = $('#comentarioText').val();
+    $.post( ("{{ url_for('guardarComentario')}}"),
+    {text: text, id : arrayMP["sql_id"]},
+    function (){
+      tableMateriaPrima.ajax.reload()
+    })
+  });
+
+  $(document).on("click", ".edition",function (){
+    if ($('#form_editar1').parsley().validate()) {
+      $('#modalEditarMP').modal('hide');
+        $.post( ("{{ url_for('editarmateriaprima') }}"),
+        {
+          id: arrayMP["sql_id"],
+          materiaprima: $('#editar_materiaprima').val(),
+          sg20: $('#editar_sg20').val(),
+          abv: $('#editar_abv').val(),
+          peg: $('#editar_peg').val(),
+          brix: $('#editar_brix').val(),
+          stock: $('#editar_stock').val(),
+          unidade:$('#editar_unidade').val(),
+          preco: $('#editar_preco').val(),
+          lote:$('#editar_lote').val(),
+          validade:$('#editar_validade').val()
+        },
+        function (){
+          tableMateriaPrima.ajax.reload()
+        })
+    }
+});
+
+$(document).on("click", ".1st",function (){
+  if ($('#form_editar1').parsley().validate()) {
+    $('#modalEditarMP').modal('hide');
+
+        $.post( ("{{ url_for('adicionarMateriaPrima') }}"),
+        {
+          materiaprima: $('#editar_materiaprima').val(),
+          sg20: $('#editar_sg20').val(),
+          abv: $('#editar_abv').val(),
+          peg: $('#editar_peg').val(),
+          brix: $('#editar_brix').val(),
+          stock: $('#editar_stock').val(),
+          unidade:$('#editar_unidade').val(),
+          preco: $('#editar_preco').val(),
+          lote:$('#editar_lote').val(),
+          validade:$('#editar_validade').val()
+        },
+        function (){
+          manageUpload()
+          tableMateriaPrima.ajax.reload()
+        })
+      }
+});
+
+function manageUpload() {
+  // var x = document.getElementById("uploadFT").value;
+  var input = document.getElementById('uploadFT').file;
+  var x = $('#uploadFT')[0].files[0]
+  var nomeMP = $('#editar_materiaprima').val();
+  console.log(x, nomeMP)
+  var formdata = new FormData();
+  formdata.append(nomeMP,x)
+  console.log(formdata)
+  $.ajax({
+    url: "{{ url_for('manageUpload') }}",
+    type: 'POST',
+    processData: false,
+    contentType: false,
+    data: formdata
+  });
+};
+
+    // apagar row materiaprima
+    $(document).on("click", "#apagar",function (){
+      $.post( ("{{ url_for('apagarRow') }}"), {string: arrayMP["sql_id"]},
+      function () {
+        tableMateriaPrima.ajax.reload()
+      });
+    });
+
+    $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+
+
+    // bebidas´
+
+    var bebidas_listMateriaPrima;
+    $(document).on("click", "#inserirFormula", function (){
+      $('#well_novaBebida').show();
+      $.getJSON ("{{ url_for('getTableMP') }}", function(incoming){
+        bebidas_listMateriaPrima = incoming;
+        populateDrop();
+      });
+    });
+
+    function populateDrop() {
+      $.each(bebidas_listMateriaPrima, function(i,p){
+        if (p['sql_materiaprima'].toLowerCase().startsWith("água")==false) {
+          $('.dropdown_materiaprima').append($('<option></option>').val(p['sql_materiaprima']).html(p['sql_materiaprima']))
+        }
+      })
+    };
+
+
+    $('.tbody_bebidas').on('change', '.dropdown_materiaprima',function(e) {
+      var row = $(e.target).closest('tr');
+      var rowLabel = row.find('#label_unidademateriaprima')
+      var p =  $('option:selected', this).text();
+      if (p.toLowerCase().startsWith("álcool")||p.toLowerCase().startsWith("xarope")) {
+        rowLabel.text('% Vol');
+      } else {
+        rowLabel.text('g/l');
+      }
+    });
+
+
+
+
+
+    // adicionar row Nova bebida
+
+    $('.tbody_bebidas').on('click','.add',function(){
+      $(this).val('Apagar');
+      $(this).attr('class','del');
+
+      var appendTxt = '<tr><td ><select class="dropdown_materiaprima" name="dropdown_materiaprima" required focus data-parsley-errors-messages-disabled><option disabled selected value> -- Inserir -- </option></select></td><td><input id="input_quantidade" data-parsley-type="number" required focus data-parsley-errors-messages-disabled required class="text-line"></input></td><td><label id="label_unidademateriaprima"></label></td><td><input class="add" type="button" value="Adicionar" /></td></tr>'
+      $("#table_bebidas tr:last").after(appendTxt);
+      var $this = $(this);
+      $.each(bebidas_listMateriaPrima, function(i,p){
+        if (p['sql_materiaprima'].toLowerCase().startsWith("água")==false) {
+          $("#table_bebidas tr:last").find('.dropdown_materiaprima').append($('<option></option>').val(p['sql_materiaprima']).html(p['sql_materiaprima']))
+        }
+      });
+    });
+
+    $('.tbody_bebidas').on('click','.del',function(){
+      $(this).parent().parent().remove();
+      return false;
+    });
+
+    $(document).on("click", "#button_guardarBebida", function (e){
+      if ($('#form_bebidas').parsley().validate()) {
+        var nomeBebida = $("#nomeBebida").val();
+        $('.tbody_bebidas tr').each(function () {
+          var select_materiaPrima = $(this).find('select.dropdown_materiaprima>option:checked').val();
+          var input_quantidade = $(this).find('#input_quantidade').val();
+          var label_unidademateriaprima = $(this).find('#label_unidademateriaprima').val();
+          console.log(nomeBebida,select_materiaPrima,input_quantidade)
+        });
+        e.preventDefault();
+      };
+    });
+
+
+
+
+
+
+    </script>
+
+
+    <style type="text/css">
+
+    #tableMP thead,
+    #tableMP th {text-align: center;}
+    #tableMP tbody,
+    #tableMP td {text-align: center;}
+
+    .green {
+        color: green;
+    }
+
+    h3{
+      margin: 10px;
+      padding: 2px;
+    }
+    #tableMP {
+      margin: 0 auto;
+      clear: both;
+      width: 95%;
+      margin-bottom: auto;
+      padding: 0;
+    }
+
+
+
+    #divshowPrecosStock {
+      margin: 0;
+      height: 100%;
+    }
+
+
+    #divNameInput{
+      position:relative;
+      margin: 10px;
+      width: 25%;
+      padding: 5px;
+    }
+
+
+  .table tbody > tr > td{
+        vertical-align: top;
+    }
+
+  .dropdown_materiaprima {
+  margin: 1px;
+  border: 1px solid #111;
+  background-color: white;
+  width: 90%;
+  padding: 5px 5px 5px 5px;
+  font-size: 14px;
+  border: none;
+  /*border: 1px solid 	#D3D3D3;*/
+  height: 8%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  float:left;
+}
+
+body {
+    font: normal Helvetica, Arial, sans-serif;
+}
+    input {
+      text-align: center;
+    }
+
+    #modalComentario {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 200px;
+      bottom: 0;
+      margin-left:auto;
+      margin-right:auto;
+      margin-top:0px;
+      fit-position: top: 0px;
+    }
+
+    #modalEditarMP {
+      height:75%;
+      width:28%;
+    }
+
+    .del {
+        padding:3px;
+        border-radius: 5px;
+        background-color: transparent;
+        border-color: Tomato;
+        border-width: thin;
+    }
+    .add {
+      padding:3px;
+      border-radius: 5px;
+      background-color: transparent;
+      border-color: SeaGreen;
+      border-width: thin;
+    }
+
+
+    th, td, tr {
+      text-align: center !important;
+      vertical-align: middle !important;
+    }
+#table_bebidas thead {
+ border-bottom: solid #778899 0.15em;
+  }
+  #table_bebidas tbody {
+   border-bottom: solid #778899 0.15em;
+    }
+
+    #tbody_bebidas tr { height: 3% !important;}
+
+    .text-line {
+      background-color: transparent;
+      color: #000000;
+      outline: none;
+      outline-style: none;
+      outline-offset: 0;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      border-bottom: solid #C0C0C0 1px;
+      padding: 3px 3px;
+      width:45%;
+    }
+
+    .form_editar1 {
+      margin-right: auto;
+      margin-left: auto;
+      margin-bottom: 1%;
+      padding-bottom: -5%;
+      max-width: 500px;
+      min-height: auto;
+    }
+    input {
+      max-width: 100%;
+      -webkit-box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+    }
+    </style>
+  </body>
